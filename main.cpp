@@ -37,9 +37,8 @@ int main() {
 	//Generate instance velocities
 	vec2 instance_vels[NUM_INSTANCES];
 	for(int i=0; i<NUM_INSTANCES; i++){
-		//instance_vels[i] = vec2(rand_betweenf(-3,3), rand_betweenf(0,6));
 		//Generate random angle
-		float theta = rand_betweenf(0,360) * ONE_DEG_IN_RAD;
+		float theta = rand_betweenf(0, 2.0*M_PI);
 		//rotate (1,0) by theta
 		vec2 rand_dir = vec2(cos(theta), sin(theta));
 		instance_vels[i] = rand_dir * rand_betweenf(0.5, 5);
