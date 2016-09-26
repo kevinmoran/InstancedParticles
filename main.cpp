@@ -18,16 +18,16 @@ int main() {
 
 	//Geometry setup
 	GLfloat particle_points[] = {
-		-0.05f,	0.05f,
-		-0.05f, -0.05f,
-		 0.05f, -0.05f,
-		-0.05f,	0.05f,
-		 0.05f, -0.05f,
-		 0.05f,  0.05f
+		-0.01f,	0.01f,
+		-0.01f, -0.01f,
+		 0.01f, -0.01f,
+		-0.01f,	0.01f,
+		 0.01f, -0.01f,
+		 0.01f,  0.01f
 	};
 
 	//Generate instance offsets
-	#define NUM_INSTANCES 100
+	#define NUM_INSTANCES 500
 	// vec2 instance_offsets[NUM_INSTANCES];
 	srand(time(0));
 	// for(int i=0; i<NUM_INSTANCES; i++){
@@ -37,7 +37,12 @@ int main() {
 	//Generate instance velocities
 	vec2 instance_vels[NUM_INSTANCES];
 	for(int i=0; i<NUM_INSTANCES; i++){
-		instance_vels[i] = vec2(rand_betweenf(-3,3), rand_betweenf(0,6));
+		//instance_vels[i] = vec2(rand_betweenf(-3,3), rand_betweenf(0,6));
+		//Generate random angle
+		float theta = rand_betweenf(0,360) * ONE_DEG_IN_RAD;
+		//rotate (1,0) by theta
+		vec2 rand_dir = vec2(cos(theta), sin(theta));
+		instance_vels[i] = rand_dir * rand_betweenf(0.5, 5);
 	}
 
 	//Generate instance colours
