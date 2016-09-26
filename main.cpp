@@ -34,8 +34,6 @@ int main() {
 		instance_offsets[i] = vec2(rand_betweenf(-1,1), rand_betweenf(-1,1));
 	}
 
-	GLuint particle_vao;
-
 	//Vertex points vbo
 	GLuint particle_points_vbo;
 	glGenBuffers(1, &particle_points_vbo);
@@ -43,13 +41,13 @@ int main() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(particle_points), particle_points, GL_STATIC_DRAW);
 
 	//Instance offsets vbo
-	GLuint instanceVBO;
-	glGenBuffers(1, &instanceVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(instance_offsets), &instance_offsets[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0); 
+	GLuint instance_vbo;
+	glGenBuffers(1, &instance_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, instance_vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(instance_offsets), instance_offsets, GL_STATIC_DRAW);
 
 	//Generate VAO
+	GLuint particle_vao;
 	glGenVertexArrays(1, &particle_vao);
 	//Bind vertex points vbo
 	glBindVertexArray(particle_vao);
@@ -58,7 +56,7 @@ int main() {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 	//Bind instance offsets vbo
 	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, instance_vbo);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL);
 	glVertexAttribDivisor(1, 1); //2nd arg = 1 means updated attribute per instance, not per vertex
 
