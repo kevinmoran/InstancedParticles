@@ -1,9 +1,9 @@
 #version 410
 
-in vec4 quad_color;
+in vec4 quad_colour;
 
-out vec4 frag_color;
+out vec4 frag_colour;
 
 void main () {
-	frag_color = quad_color;
+	frag_colour = quad_colour;
 }
