@@ -49,5 +49,7 @@ bool init_gl(GLFWwindow* &window, int window_width, const int window_height) {
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	return true;
 }
