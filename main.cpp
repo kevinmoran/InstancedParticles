@@ -43,6 +43,9 @@ int main() {
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
+		if (glfwGetKey(window, GLFW_KEY_ENTER)) {
+			create_particles(vec2(0,0));
+		}
 
 		//Update game state
 

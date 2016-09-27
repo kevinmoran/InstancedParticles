@@ -6,7 +6,7 @@
 
 //Internal system data
 #define NUM_INSTANCES 500
-static unsigned int num_live_particles = NUM_INSTANCES;
+static unsigned int num_live_particles = 0;
 double particle_timer = 0.0;
 
 Shader particle_system_shader;
@@ -28,22 +28,6 @@ void init_particle_system(){
 		 0.01f,  0.01f
 	};
 
-	//Generate instance velocities
-	vec2 instance_vels[NUM_INSTANCES];
-	for(int i=0; i<NUM_INSTANCES; i++){
-		//Generate random angle
-		float theta = rand_betweenf(0, 2.0*M_PI);
-		//rotate (1,0) by theta
-		vec2 rand_dir = vec2(cos(theta), sin(theta));
-		instance_vels[i] = rand_dir * rand_betweenf(0.5, 5);
-	}
-
-	//Generate instance colours
-	vec4 instance_colours[NUM_INSTANCES];
-	for(int i=0; i<NUM_INSTANCES; i++){
-		instance_colours[i] = vec4(rand_betweenf(0.5f,1), rand_betweenf(0.3f,1), rand_betweenf(0.5f,0.8f), 1);
-	}
-
 	//Vertex points vbo
 	glGenBuffers(1, &particle_points_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, particle_points_vbo);
@@ -54,17 +38,13 @@ void init_particle_system(){
 	glGenBuffers(1, &instance_vel_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, instance_vel_vbo);
 	//Reserve an empty buffer of the desired size
-	glBufferData(GL_ARRAY_BUFFER, sizeof(instance_vels), NULL, GL_STATIC_DRAW);
-	//Send over data into empty buffer
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(instance_vels), instance_vels);
+	glBufferData(GL_ARRAY_BUFFER, NUM_INSTANCES*2*sizeof(float), NULL, GL_STATIC_DRAW);
 
 	//Instance colours vbo
 	glGenBuffers(1, &instance_colour_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, instance_colour_vbo);
 	//Reserve an empty buffer of the desired size 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(instance_colours), NULL, GL_STATIC_DRAW);
-	//Send over data into empty buffer
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(instance_colours), instance_colours);
+	glBufferData(GL_ARRAY_BUFFER, NUM_INSTANCES*4*sizeof(float), NULL, GL_STATIC_DRAW);
 
 	//Generate VAO
 	glGenVertexArrays(1, &particle_vao);
@@ -99,11 +79,38 @@ void init_particle_system(){
 void draw_particles(double dt){
     glUseProgram(particle_system_shader.prog_id);
 	particle_timer += dt;
-    if(particle_timer>1.5f){
-        particle_timer = 0.0f;
-        glUniform2f(origin_loc, rand_betweenf(-0.5f,0.5f), rand_betweenf(-0.1f, 0.1f));
-    }
     glUniform1f(dt_loc, particle_timer);
     glBindVertexArray(particle_vao);
 	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, num_live_particles);
+}
+
+void create_particles(vec2 location){
+    //Generate data for new particle effect
+	vec2 instance_vels[NUM_INSTANCES];
+	vec4 instance_colours[NUM_INSTANCES];
+
+    //Generate instance velocities
+	for(int i=0; i<NUM_INSTANCES; i++){
+		//Generate random angle
+		float theta = rand_betweenf(0, 2.0*M_PI);
+		//rotate (1,0) by theta
+		vec2 rand_dir = vec2(cos(theta), sin(theta));
+		instance_vels[i] = rand_dir * rand_betweenf(0.5, 2); //scale velocity randomly
+	}
+
+	//Generate instance colours
+	for(int i=0; i<NUM_INSTANCES; i++){
+		instance_colours[i] = vec4(rand_betweenf(0.5f,1), rand_betweenf(0.3f,1), rand_betweenf(0.5f,0.8f), 1);
+	}
+    
+	//Send over velocity data
+    glBindBuffer(GL_ARRAY_BUFFER, instance_vel_vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(instance_vels), instance_vels);
+	//Send over colour data
+    glBindBuffer(GL_ARRAY_BUFFER, instance_colour_vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(instance_colours), instance_colours);
+
+    num_live_particles = NUM_INSTANCES;
+    particle_timer = 0.0;
+    glUniform2fv(origin_loc, 1, location.v);
 }
