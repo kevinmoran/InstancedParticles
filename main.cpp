@@ -26,13 +26,8 @@ int main() {
 		 0.01f,  0.01f
 	};
 
-	//Generate instance offsets
 	#define NUM_INSTANCES 500
-	// vec2 instance_offsets[NUM_INSTANCES];
 	srand(time(0));
-	// for(int i=0; i<NUM_INSTANCES; i++){
-	// 	instance_offsets[i] = vec2(rand_betweenf(-1,1), rand_betweenf(-1,1));
-	// }
 
 	//Generate instance velocities
 	vec2 instance_vels[NUM_INSTANCES];
@@ -56,22 +51,24 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, particle_points_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(particle_points), particle_points, GL_STATIC_DRAW);
 
-	//Instance offsets vbo
-	// GLuint instance_vbo;
-	// glGenBuffers(1, &instance_vbo);
-	// glBindBuffer(GL_ARRAY_BUFFER, instance_vbo);
-	// glBufferData(GL_ARRAY_BUFFER, sizeof(instance_offsets), instance_offsets, GL_STATIC_DRAW);
-
+	// *** Per-instance data *** //
 	//Instance velocities vbo
 	GLuint instance_vel_vbo;
 	glGenBuffers(1, &instance_vel_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, instance_vel_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(instance_vels), instance_vels, GL_STATIC_DRAW);
+	//Reserve an empty buffer of the desired size
+	glBufferData(GL_ARRAY_BUFFER, sizeof(instance_vels), NULL, GL_STATIC_DRAW);
+	//Send over data into empty buffer
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(instance_vels), instance_vels);
+
 	//Instance colours vbo
 	GLuint instance_colour_vbo;
 	glGenBuffers(1, &instance_colour_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, instance_colour_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(instance_colours), instance_colours, GL_STATIC_DRAW);
+	//Reserve an empty buffer of the desired size 
+	glBufferData(GL_ARRAY_BUFFER, sizeof(instance_colours), NULL, GL_STATIC_DRAW);
+	//Send over data into empty buffer
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(instance_colours), instance_colours);
 
 	//Generate VAO
 	GLuint particle_vao;
@@ -82,12 +79,6 @@ int main() {
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, particle_points_vbo);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-
-	// //Bind instance offsets vbo
-	// glEnableVertexAttribArray(1);
-	// glBindBuffer(GL_ARRAY_BUFFER, instance_vbo);
-	// glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL);
-	// glVertexAttribDivisor(1, 1); //2nd arg = 1 means updated attribute per instance, not per vertex
 
 	//Bind instance velocities vbo
 	glEnableVertexAttribArray(1);
