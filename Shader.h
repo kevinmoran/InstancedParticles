@@ -5,12 +5,21 @@
 
 #define SHADER_PATH "Shaders/"
 
-class Shader {
-public:
+struct Shader {
     GLuint prog_id, vs, fs;
     GLuint M_loc, V_loc, P_loc;
     bool compiled;
     
+    Shader() {
+        prog_id = -1;
+        vs = -1;
+        fs = -1;
+        M_loc = -1;
+        V_loc = -1;
+        P_loc = -1;
+        compiled = false;
+    }
+
     Shader(const char* vert_file, const char* frag_file) {
         prog_id = -1;
         vs = -1;
