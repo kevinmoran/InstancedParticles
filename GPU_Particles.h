@@ -97,10 +97,10 @@ void init_particle_system(){
 	glVertexAttribDivisor(4, PARTICLE_BLOCK_SIZE);
 
     //Load shader
-    particle_system_shader.load_shader_program("particles_instanced.vert", "pass.frag");
-    glUseProgram(particle_system_shader.prog_id);
-	//origin_loc = glGetUniformLocation(particle_system_shader.prog_id, "origin");
-	//dt_loc = glGetUniformLocation(particle_system_shader.prog_id, "dt");
+    particle_system_shader = load_shader("particles_instanced.vert", "pass.frag");
+    glUseProgram(particle_system_shader.id);
+	//origin_loc = glGetUniformLocation(particle_system_shader.id, "origin");
+	//dt_loc = glGetUniformLocation(particle_system_shader.id, "dt");
 	//glUniform2f(origin_loc, 0, 0);
 	
 }
@@ -117,7 +117,7 @@ void draw_particles(double dt){
     glBindBuffer(GL_ARRAY_BUFFER, timers_vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, (num_live_blocks)*sizeof(float), timers);
     
-    glUseProgram(particle_system_shader.prog_id);
+    glUseProgram(particle_system_shader.id);
 	//particle_timer += dt;
     //glUniform1f(dt_loc, particle_timer);
     glBindVertexArray(particle_vao);
