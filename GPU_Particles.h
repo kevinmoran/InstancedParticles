@@ -8,8 +8,8 @@
 #define MAX_NUM_PARTICLES 1024
 #define PARTICLE_BLOCK_SIZE 64
 #define NUM_PARTICLE_BLOCKS (MAX_NUM_PARTICLES/PARTICLE_BLOCK_SIZE)
-static unsigned int num_live_particles = 0;
-static unsigned int num_live_blocks = 0;
+static int num_live_particles = 0;
+static int num_live_blocks = 0;
 static float timers[NUM_PARTICLE_BLOCKS] = {};
 static vec2 origins[NUM_PARTICLE_BLOCKS] = {};
 
